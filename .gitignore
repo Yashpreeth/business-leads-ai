@@ -1,5 +1,10 @@
 node_modules
 .env
+.env.local
+.env.production
 *.csv
 output/*
 user-preferences.json
+*.log
+.vercel
+.railway

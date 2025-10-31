@@ -2,7 +2,7 @@
 
 **Open-source lead generation tool with AI-powered content creation and web dashboard**
 
-Generate business leads from Google Maps, create personalized marketing content using OpenAI, and manage everything through a modern web interface.
+Generate business leads from Google Maps, create personalized marketing content using Google Gemini AI, and manage everything through a modern web interface.
 
 [![GitHub stars](https://img.shields.io/github/stars/asiifdev/business-leads-ai-automation?style=social)](https://github.com/asiifdev/business-leads-ai-automation/stargazers)
 [![GitHub forks](https://img.shields.io/github/forks/asiifdev/business-leads-ai-automation?style=social)](https://github.com/asiifdev/business-leads-ai-automation/fork)
@@ -29,7 +29,7 @@ This tool helps you:
 
 ### Prerequisites
 - Node.js 16+
-- OpenAI API key ([get one here](https://platform.openai.com/))
+- Google Gemini API key ([get one here](https://makersuite.google.com/app/apikey))
 
 ### Installation
 
@@ -45,8 +45,8 @@ npm install
 # Copy environment template
 cp .env.example .env
 
-# Add your OpenAI API key to .env
-OPENAI_API_KEY=your-openai-key-here
+# Add your Gemini API key to .env
+GEMINI_API_KEY=your-gemini-key-here
 ```
 
 ### Usage Options

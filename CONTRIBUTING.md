@@ -52,6 +52,7 @@ Edit `.env` file with your test credentials:
 
 ```env
 OPENAI_API_KEY=your-test-api-key
+GEMINI_API_KEY=your-test-gemini-key
 BUSINESS_NAME=Test Business
 BUSINESS_PHONE=+6281234567890
 BUSINESS_EMAIL=test@business.com

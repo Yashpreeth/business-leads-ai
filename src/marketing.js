@@ -6,21 +6,22 @@ class MarketingAutomation {
         this.leads = [];
         this.messagesSent = 0;
         this.responses = 0;
-        this.openai = null;
+        this.gemini = null;
         
-        this.initOpenAI();
+        this.initGemini();
     }
 
-    initOpenAI() {
+    initGemini() {
         try {
-            const OpenAI = require('openai');
-            this.openai = new OpenAI({
-                apiKey: process.env.OPENAI_API_KEY,
+            const { GoogleGenerativeAI } = require('@google/generative-ai');
+            const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+            this.gemini = genAI.getGenerativeModel({ 
+                model: process.env.GEMINI_MODEL || "gemini-pro" 
             });
-            console.log('✅ OpenAI initialized successfully');
+            console.log('✅ Gemini initialized successfully');
         } catch (error) {
-            console.error('❌ Error initializing OpenAI:', error.message);
-            console.log('💡 Make sure to install: npm install openai');
+            console.error('❌ Error initializing Gemini:', error.message);
+            console.log('💡 Make sure to install: npm install @google/generative-ai');
         }
     }
 
@@ -38,32 +39,21 @@ class MarketingAutomation {
 
     // Generate AI-powered marketing content
     async generateAIMarketingContent(lead) {
-        if (!this.openai) {
-            console.log('⚠️ OpenAI not configured, skipping AI content generation');
+        if (!this.gemini) {
+            console.log('⚠️ Gemini not configured, skipping AI content generation');
             return null;
         }
 
         try {
             const prompt = this.buildMarketingPrompt(lead);
             
-            const completion = await this.openai.chat.completions.create({
-                model: process.env.OPENAI_MODEL || "gpt-4.1-nano",
-                messages: [
-                    {
-                        role: "system",
-                        content: "You are a professional marketing expert specializing in Indonesian business outreach. Create personalized, engaging, and conversion-focused marketing content."
-                    },
-                    {
-                        role: "user",
-                        content: prompt
-                    }
-                ],
-                max_tokens: 1000,
-                temperature: 0.7
-            });
-
-            const response = completion.choices[0].message.content;
-            return this.parseMarketingResponse(response);
+            const systemPrompt = "You are a professional marketing expert specializing in Indonesian business outreach. Create personalized, engaging, and conversion-focused marketing content.";
+            const fullPrompt = `${systemPrompt}\n\n${prompt}`;
+            
+            const result = await this.gemini.generateContent(fullPrompt);
+            const response = await result.response;
+            const responseText = response.text();
+            return this.parseMarketingResponse(responseText);
 
         } catch (error) {
             console.error('Error generating AI marketing content:', error);
@@ -191,32 +181,22 @@ Generate the marketing content:`;
     }
 
     async generateBaseMarketingTemplate(marketingContent, callToAction = "") {
-        if (!this.openai) {
-            console.log('⚠️ OpenAI not configured, cannot generate base template');
+        if (!this.gemini) {
+            console.log('⚠️ Gemini not configured, cannot generate base template');
             return null;
         }
 
         try {
             const prompt = this.buildBaseTemplatePrompt(marketingContent, callToAction);
             
-            const completion = await this.openai.chat.completions.create({
-                model: process.env.OPENAI_MODEL || "gpt-4.1-nano",
-                messages: [
-                    {
-                        role: "system",
-                        content: "You are a professional marketing expert specializing in Indonesian business outreach. Create engaging and conversion-focused marketing templates."
-                    },
-                    {
-                        role: "user",
-                        content: prompt
-                    }
-                ],
-                max_tokens: 1000,
-                temperature: 0.7
-            });
-
-            const response = completion.choices[0].message.content;
-            return this.parseMarketingResponse(response);
+            const systemPrompt = "You are a professional marketing expert specializing in Indonesian business outreach. Create engaging and conversion-focused marketing templates.";
+            const fullPrompt = `${systemPrompt}\n\n${prompt}`;
+            
+            const result = await this.gemini.generateContent(fullPrompt);
+            const response = await result.response;
+            const responseText = response.text();
+            
+            return this.parseMarketingResponse(responseText);
 
         } catch (error) {
             console.error('Error generating base marketing template:', error);

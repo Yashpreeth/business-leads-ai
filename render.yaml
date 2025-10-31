@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: business-leads-ai
+    env: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: PRIMARY_INDUSTRY
+        value: professional
+      - key: CAMPAIGN_STYLE
+        value: balanced

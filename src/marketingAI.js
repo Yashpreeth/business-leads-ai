@@ -2,23 +2,24 @@ require('dotenv').config();
 
 class MarketingAI {
     constructor() {
-        this.openai = null;
-        this.initOpenAI();
+        this.gemini = null;
+        this.initGemini();
         this.industryTemplates = this.loadIndustryTemplates();
         this.indonesianContext = this.loadIndonesianContext();
         this.englishContext = this.loadEnglishContext();
         this.marketData = this.loadRealMarketData();
     }
 
-    initOpenAI() {
+    initGemini() {
         try {
-            const OpenAI = require('openai');
-            this.openai = new OpenAI({
-                apiKey: process.env.OPENAI_API_KEY,
+            const { GoogleGenerativeAI } = require('@google/generative-ai');
+            const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+            this.gemini = genAI.getGenerativeModel({ 
+                model: process.env.GEMINI_MODEL || "gemini-pro" 
             });
-            console.log('✅ Enhanced Marketing AI initialized');
+            console.log('✅ Enhanced Marketing AI initialized with Gemini');
         } catch (error) {
-            console.error('❌ Error initializing OpenAI:', error.message);
+            console.error('❌ Error initializing Gemini:', error.message);
         }
     }
 
@@ -307,8 +308,8 @@ class MarketingAI {
     }
 
     async generateIndustrySpecificContent(lead, industry, yourService, campaignStyle = 'balanced', language = 'indonesian') {
-        if (!this.openai) {
-            throw new Error('OpenAI not configured');
+        if (!this.gemini) {
+            throw new Error('Gemini not configured');
         }
 
         const template = this.industryTemplates[industry];
@@ -319,23 +320,14 @@ class MarketingAI {
         const prompt = this.buildIndustryPrompt(lead, template, yourService, campaignStyle, language);
         
         try {
-            const completion = await this.openai.chat.completions.create({
-                model: process.env.OPENAI_MODEL || "gpt-4o-mini",
-                messages: [
-                    {
-                        role: "system",
-                        content: this.getSystemPrompt(industry, campaignStyle, language)
-                    },
-                    {
-                        role: "user",
-                        content: prompt
-                    }
-                ],
-                max_tokens: 3000,
-                temperature: 0.6
-            });
+            const systemPrompt = this.getSystemPrompt(industry, campaignStyle, language);
+            const fullPrompt = `${systemPrompt}\n\n${prompt}`;
+            
+            const result = await this.gemini.generateContent(fullPrompt);
+            const response = await result.response;
+            const text = response.text();
 
-            return this.parseIndustryResponse(completion.choices[0].message.content);
+            return this.parseIndustryResponse(text);
         } catch (error) {
             console.error('Error generating industry-specific content:', error);
             return null;
@@ -576,8 +568,8 @@ Make it specific to their business, include relevant market data, and create urg
     }
 
     async generateFollowUpContent(lead, industry, yourService, style, language = 'indonesian') {
-        if (!this.openai) {
-            throw new Error('OpenAI not configured');
+        if (!this.gemini) {
+            throw new Error('Gemini not configured');
         }
 
         const template = this.industryTemplates[industry];
@@ -602,24 +594,15 @@ Make it specific to their business, include relevant market data, and create urg
             Use urgency based on trends: ${marketData.digitalTransformation}`;
 
         try {
-            const completion = await this.openai.chat.completions.create({
-                model: process.env.OPENAI_MODEL || "gpt-4o-mini",
-                messages: [
-                    {
-                        role: "system",
-                        content: this.getSystemPrompt(industry, style, language) +
-                                "\n\nFOCUS: This is a FOLLOW-UP email. Include case studies, testimonials, and specific ROI examples."
-                    },
-                    {
-                        role: "user",
-                        content: prompt
-                    }
-                ],
-                max_tokens: 3000,
-                temperature: 0.6
-            });
+            const systemPrompt = this.getSystemPrompt(industry, style, language) +
+                                "\n\nFOCUS: This is a FOLLOW-UP email. Include case studies, testimonials, and specific ROI examples.";
+            const fullPrompt = `${systemPrompt}\n\n${prompt}`;
+            
+            const result = await this.gemini.generateContent(fullPrompt);
+            const response = await result.response;
+            const text = response.text();
 
-            return this.parseIndustryResponse(completion.choices[0].message.content);
+            return this.parseIndustryResponse(text);
         } catch (error) {
             console.error('Error generating follow-up content:', error);
             return null;
@@ -627,8 +610,8 @@ Make it specific to their business, include relevant market data, and create urg
     }
 
     async generateClosingContent(lead, industry, yourService, style, language = 'indonesian') {
-        if (!this.openai) {
-            throw new Error('OpenAI not configured');
+        if (!this.gemini) {
+            throw new Error('Gemini not configured');
         }
 
         const template = this.industryTemplates[industry];
@@ -653,24 +636,15 @@ Make it specific to their business, include relevant market data, and create urg
             Emphasize the cost of inaction.`;
 
         try {
-            const completion = await this.openai.chat.completions.create({
-                model: process.env.OPENAI_MODEL || "gpt-4o-mini",
-                messages: [
-                    {
-                        role: "system",
-                        content: this.getSystemPrompt(industry, style, language) +
-                                "\n\nFOCUS: This is a CLOSING email. Create maximum urgency, include guarantees, and make the next step crystal clear."
-                    },
-                    {
-                        role: "user",
-                        content: prompt
-                    }
-                ],
-                max_tokens: 3000,
-                temperature: 0.6
-            });
+            const systemPrompt = this.getSystemPrompt(industry, style, language) +
+                                "\n\nFOCUS: This is a CLOSING email. Create maximum urgency, include guarantees, and make the next step crystal clear.";
+            const fullPrompt = `${systemPrompt}\n\n${prompt}`;
+            
+            const result = await this.gemini.generateContent(fullPrompt);
+            const response = await result.response;
+            const text = response.text();
 
-            return this.parseIndustryResponse(completion.choices[0].message.content);
+            return this.parseIndustryResponse(text);
         } catch (error) {
             console.error('Error generating closing content:', error);
             return null;

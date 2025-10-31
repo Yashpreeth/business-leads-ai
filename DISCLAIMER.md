@@ -24,9 +24,9 @@ This software is provided for **educational and legitimate business purposes onl
 - **Truth in Advertising**: Ensure marketing claims are accurate
 
 ### 3. **API Usage**
-- **OpenAI Terms**: Follow [OpenAI's Terms of Service](https://openai.com/policies/terms-of-use)
+- **Google Gemini Terms**: Follow [Google's Generative AI Terms of Service](https://ai.google.dev/terms)
 - **API Limits**: Respect rate limits and usage quotas
-- **Content Guidelines**: Ensure generated content complies with OpenAI policies
+- **Content Guidelines**: Ensure generated content complies with Google's AI policies
 
 ## 📋 User Responsibilities
 
