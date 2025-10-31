@@ -3,14 +3,48 @@ services:
     name: business-leads-ai
     env: node
     plan: free
-    buildCommand: npm install
+    buildCommand: npm install && npx puppeteer browsers install chrome
     startCommand: npm start
     envVars:
       - key: NODE_ENV
         value: production
       - key: GEMINI_API_KEY
         sync: false
+      - key: GEMINI_MODEL
+        value: gemini-pro
       - key: PRIMARY_INDUSTRY
         value: professional
       - key: CAMPAIGN_STYLE
         value: balanced
+      - key: DELAY_BETWEEN_SCRAPES
+        value: 3000
+      - key: MAX_RETRIES
+        value: 3
+      - key: DEFAULT_RESULT_LIMIT
+        value: 20
+      - key: OUTPUT_FORMAT
+        value: csv
+      - key: OUTPUT_DIRECTORY
+        value: output
+      - key: MIN_LEAD_SCORE
+        value: 60
+      - key: ENABLE_LEAD_SCORING
+        value: true
+      - key: PRIORITIZE_HIGH_RATING
+        value: true
+      - key: ENABLE_INDUSTRY_TEMPLATES
+        value: true
+      - key: GENERATE_MULTI_TOUCH
+        value: false
+      - key: MAX_CONTENT_GENERATION
+        value: 50
+      - key: ENABLE_DEBUG_LOGGING
+        value: false
+      - key: SAVE_PROGRESS_LOGS
+        value: true
+      - key: AUTO_CLEANUP_OLD_CAMPAIGNS
+        value: true
+      - key: PUPPETEER_SKIP_CHROMIUM_DOWNLOAD
+        value: false
+      - key: PUPPETEER_CACHE_DIR
+        value: /opt/render/.cache/puppeteer

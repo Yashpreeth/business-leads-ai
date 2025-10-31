@@ -9,8 +9,18 @@ class BusinessScraper {
 
   async init() {
     this.browser = await puppeteer.launch({
-      headless: true, // Set true untuk production
-      args: ["--no-sandbox", "--disable-setuid-sandbox"],
+      headless: true,
+      args: [
+        "--no-sandbox",
+        "--disable-setuid-sandbox",
+        "--disable-dev-shm-usage",
+        "--disable-accelerated-2d-canvas",
+        "--no-first-run",
+        "--no-zygote",
+        "--single-process",
+        "--disable-gpu"
+      ],
+      executablePath: process.env.NODE_ENV === 'production' ? puppeteer.executablePath() : undefined
     });
     console.log("Browser initialized");
   }

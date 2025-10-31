@@ -11,6 +11,7 @@
         "web": "node src/web/server.js",
         "web:dev": "nodemon src/web/server.js",
         "test": "node test.js",
+        "postinstall": "npx puppeteer browsers install chrome",
         "help": "echo 'Available commands:\n  npm run setup     - Interactive setup wizard\n  npm run campaign  - Create and run campaigns\n  npm run web       - Start web dashboard\n  npm run web:dev   - Web dashboard development mode\n  npm start         - Run with CLI arguments\n  npm run dev       - Development mode with auto-reload'"
     },
     "keywords": [
